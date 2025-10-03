@@ -80,7 +80,7 @@ const Users = () => {
         address,
         payment_methods: paymentMethods,
       });
-      alert("User updated successfully");
+      toast.success(`User updated successfully!`);
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -88,7 +88,7 @@ const Users = () => {
       alert("Failed to update user");
       console.error("Error updating user:", error);
     } finally {
-      setShowModal(false);
+      setShowUpdateModal(false);
       setFirstName("");
       setLastName("");
       setEmail("");
