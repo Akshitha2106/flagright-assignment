@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+.font-roboto {
+  font-family: "Montserrat", sans-serif;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--sidebar-border-light);
+}
+
+body.dark th,
+body.dark td {
+  border-bottom: 1px solid var(--sidebar-border-dark);
+}
+
+th {
+  background-color: var(--sidebar-bg-light);
+}
+
+body.dark th {
+  background-color: var(--sidebar-bg-dark);
+}
