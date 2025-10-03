@@ -51,25 +51,40 @@ const Transactions = () => {
 
   const handleAddTransaction = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+  // Add these state variables at the top with your other useState hooks
+  const [currentPage, setCurrentPage] = useState(1);
+  const entriesPerPage = 5;
 
+  // Compute current page transactions
+  const indexOfLastEntry = currentPage * entriesPerPage;
+  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const currentTransactions = transactions.slice(
+    indexOfFirstEntry,
+    indexOfLastEntry
+  );
   const handleUpdate = (txn) => {
     setSelectedTxn(txn);
     setAmount(txn.transaction.amount);
+    setSenderId(txn.sender?.id || ""); // add senderId
+    setReceiverId(txn.receiver?.id || ""); // add receiverIdc
     setShowUpdateModal(true);
   };
 
   const handleCloseUpdateModal = () => {
     setShowUpdateModal(false);
     setSelectedTxn(null);
+    setSenderId(""); // add senderId
+    setReceiverId(""); // add receiverId
   };
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateTransaction({
+      const response = await updateTransaction({
         id: selectedTxn.transaction.id,
         amount,
       });
+      console.log(response);
       toast.success("Transaction updated successfully!");
       setShowUpdateModal(false);
       listTransactions();
@@ -294,28 +309,28 @@ const Transactions = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
-          <div className="bg-white p-4 rounded shadow-md flex flex-col">
-            <div className="flex justify-between">
-              <h2 className="text-lg font-bold mb-2">Add Transaction</h2>
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 bg-black/50">
+          <div
+            className="p-6 rounded-2xl shadow-2xl flex flex-col w-full max-w-lg
+        theme dark ? bg-gray-900 text-white : bg-white text-black"
+          >
+            <div className="flex justify-between items-center border-b pb-2 mb-4">
+              <h2 className="text-xl font-semibold">➕ Add Transaction</h2>
               <Buttons
-                text={"X"}
+                text="✕"
                 onClick={handleCloseModal}
-                className={"bg-black"}
+                className="rounded-full w-8 h-8 flex items-center justify-center bg-gray-300 text-black hover:bg-gray-400"
               />
             </div>
-            <form
-              className="max-w-md mx-auto flex flex-col"
-              onSubmit={handleSubmit}
-            >
-              <div className="relative z-0 w-full mb-5 group">
+            <form className="space-y-5" onSubmit={handleSubmit}>
+              {/* Sender */}
+              <div>
+                <label className="block text-sm font-medium">Sender</label>
                 <select
-                  name="senderId"
-                  id="senderId"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required
                   value={senderId}
                   onChange={(e) => setSenderId(e.target.value)}
+                  className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Sender</option>
                   {users.map((user) => (
@@ -324,21 +339,16 @@ const Transactions = () => {
                     </option>
                   ))}
                 </select>
-                <label
-                  htmlFor="senderId"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Sender
-                </label>
               </div>
-              <div className="relative z-0 w-full mb-5 group">
+
+              {/* Receiver */}
+              <div>
+                <label className="block text-sm font-medium">Receiver</label>
                 <select
-                  name="receiverId"
-                  id="receiverId"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required
                   value={receiverId}
                   onChange={(e) => setReceiverId(e.target.value)}
+                  className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Receiver</option>
                   {users.map((user) => (
@@ -347,70 +357,47 @@ const Transactions = () => {
                     </option>
                   ))}
                 </select>
-                <label
-                  htmlFor="receiverId"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Receiver
-                </label>
               </div>
-              <div className="relative z-0 w-full mb-5 group">
+
+              {/* Amount */}
+              <div>
+                <label className="block text-sm font-medium">Amount</label>
                 <input
                   type="number"
-                  name="amount"
-                  id="amount"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
+                  className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <label
-                  htmlFor="amount"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Amount
-                </label>
               </div>
-              <div className="relative z-0 w-full mb-5 group">
+
+              {/* IP */}
+              <div>
+                <label className="block text-sm font-medium">IP Address</label>
                 <input
                   type="text"
-                  name="ip"
-                  id="ip"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={ip}
                   onChange={(e) => setIp(e.target.value)}
+                  className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <label
-                  htmlFor="ip"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  IP Address
-                </label>
               </div>
-              <div className="relative z-0 w-full mb-5 group">
+
+              {/* Device ID */}
+              <div>
+                <label className="block text-sm font-medium">Device ID</label>
                 <input
                   type="text"
-                  name="deviceId"
-                  id="deviceId"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={deviceId}
                   onChange={(e) => setDeviceId(e.target.value)}
+                  className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <label
-                  htmlFor="deviceId"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Device ID
-                </label>
               </div>
+
               <button
                 type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                className="w-full py-2.5 px-5 bg-blue-700 text-white rounded-lg font-medium hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
               >
                 Submit
               </button>
@@ -419,43 +406,33 @@ const Transactions = () => {
         </div>
       )}
       {showUpdateModal && (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
-          <div className="bg-gray-100 p-4 rounded shadow-md flex flex-col">
-            <div className="flex justify-between gap-2">
-              <h2 className="text-lg font-bold mb-2 text-gray-900">
-                Update Transaction
-              </h2>
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 bg-black/50">
+          <div
+            className={`p-6 rounded-2xl shadow-2xl flex flex-col w-full max-w-lg
+        ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
+          >
+            <div className="flex justify-between items-center border-b pb-2 mb-4">
+              <h2 className="text-xl font-semibold">✏️ Update Transaction</h2>
               <Buttons
-                text={"X"}
+                text="✕"
                 onClick={handleCloseUpdateModal}
-                color={"secondary"}
+                className="rounded-full w-8 h-8 flex items-center justify-center bg-gray-300 text-black hover:bg-gray-400"
               />
             </div>
-            <form
-              className="max-w-md mx-auto flex flex-col"
-              onSubmit={handleUpdateSubmit}
-            >
-              <div className="relative z-0 w-full mb-5 group">
+            <form className="space-y-5" onSubmit={handleUpdateSubmit}>
+              <div>
+                <label className="block text-sm font-medium">Amount</label>
                 <input
                   type="number"
-                  name="amount"
-                  id="amount"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
+                  className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <label
-                  htmlFor="amount"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Amount
-                </label>
               </div>
               <button
                 type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="w-full py-2.5 px-5 bg-blue-700 text-white rounded-lg font-medium hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
               >
                 Submit
               </button>
@@ -501,7 +478,7 @@ const Transactions = () => {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((txn) => (
+                {currentTransactions.map((txn) => (
                   <tr
                     key={txn.transaction.id}
                     className={`border-b ${
@@ -552,7 +529,7 @@ const Transactions = () => {
                     >
                       {txn.receiver?.name || "-"}
                     </td>
-                    <td className={`px-6 py-4 `}>
+                    <td className={`px-6 py-4`}>
                       <div className="flex gap-2 text-white">
                         <Buttons
                           type="primary"
@@ -574,6 +551,31 @@ const Transactions = () => {
                 ))}
               </tbody>
             </table>
+            <div className="flex justify-end items-center gap-2 mt-4 p-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className="px-3 py-1 hover:bg-gray-400 theme dark ? bg-gray-900 text-white : bg-white text-black"
+              >
+                Prev
+              </button>
+              <span>
+                Page {currentPage} of{" "}
+                {Math.ceil(transactions.length / entriesPerPage)}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) =>
+                    Math.min(
+                      prev + 1,
+                      Math.ceil(transactions.length / entriesPerPage)
+                    )
+                  )
+                }
+                className="px-3 py-1 hover:bg-gray-400 theme dark ? bg-gray-900 text-white : bg-white text-black"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       )}

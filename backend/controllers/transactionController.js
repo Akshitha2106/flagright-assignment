@@ -28,6 +28,25 @@ export async function createOrUpdateTransaction(driver, transactionData) {
   }
 }
 
+export async function updateTransactionAmount(driver, { id, amount }) {
+  const session = driver.session();
+  try {
+    const result = await session.run(
+      `MATCH (t:Transaction {id: $id}) SET t.amount = $amount RETURN t`,
+      { id, amount }
+    );
+    const updatedTransaction = result.records[0]?.get("t")?.properties || null;
+    return { success: true, transaction: updatedTransaction };
+  } catch (err) {
+    return {
+      success: false,
+      error: err.message || "Error updating transaction",
+    };
+  } finally {
+    await session.close();
+  }
+}
+
 export async function listAllTransactions(driver) {
   const session = driver.session();
 

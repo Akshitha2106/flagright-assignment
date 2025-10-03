@@ -40,6 +40,17 @@ const Users = () => {
   const navigate = useNavigate();
   const theme = useTheme();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const entriesPerPage = 6;
+
+  // Compute paginated users
+  const indexOfLastEntry = currentPage * entriesPerPage;
+  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const currentUsers = users.slice(indexOfFirstEntry, indexOfLastEntry);
+
+  // Compute total pages
+  const totalPages = Math.ceil(users.length / entriesPerPage);
+
   const handleAddUser = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
   const handleUpdate = (user) => {
@@ -212,123 +223,95 @@ const Users = () => {
       <h2 className="text-lg font-semibold text-white">Users List</h2>
 
       {/* Add User Modal */}
+      {/* Add User Modal */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
           <div
-            className="p-4 rounded  shadow-md flex flex-col 
-             bg-white"
+            className="p-6 rounded-2xl shadow-2xl flex flex-col w-full max-w-lg
+        
+          theme dark? bg-gray-900 text-white : bg-white text-black"
           >
-            <div className="flex justify-between">
-              <h2
-                className="text-lg font-bold mb-2 
-                   text-gray-900"
-              >
-                Add User
-              </h2>
-              <Button type="secondary" text="X" onClick={handleCloseModal} />
+            <div className="flex justify-between items-center border-b pb-2 mb-4">
+              <h2 className="text-xl font-semibold">➕ Add User</h2>
+              <Button type="secondary" text="✕" onClick={handleCloseModal} />
             </div>
-            <form
-              className="max-w-md mx-auto flex flex-col"
-              onSubmit={handleSubmit}
-            >
-              <div className="relative z-0 w-full mb-5 group">
+            <form className="space-y-5" onSubmit={handleSubmit}>
+              {/* First Name */}
+              <div>
+                <label className="block text-sm font-medium">First Name</label>
                 <input
                   type="text"
-                  name="floatingfirstname"
-                  id="floatingfirstname"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   onChange={(e) => setFirstName(e.target.value)}
+                  className="mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+              
+              
+             
+              "
                 />
-                <label
-                  htmlFor="floatingfirstname"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  First name
-                </label>
               </div>
 
-              <div className="relative z-0 w-full mb-5 group">
+              {/* Last Name */}
+              <div>
+                <label className="block text-sm font-medium">Last Name</label>
                 <input
                   type="text"
-                  name="floatinglastname"
-                  id="floatinglastname"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   onChange={(e) => setLastName(e.target.value)}
+                  className="mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+              
+               
+              "
                 />
-                <label
-                  htmlFor="floatinglastname"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Last name
-                </label>
               </div>
 
-              <div className="relative z-0 w-full mb-5 group">
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium">Email</label>
                 <input
                   type="email"
-                  name="floatingemail"
-                  id="floatingemail"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   onChange={(e) => setEmail(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+              `}
                 />
-                <label
-                  htmlFor="floatingemail"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Email address
-                </label>
               </div>
 
-              <div className="relative z-0 w-full mb-5 group">
+              {/* Phone */}
+              <div>
+                <label className="block text-sm font-medium">Phone</label>
                 <input
                   type="tel"
-                  name="floatingphone"
-                  id="floatingphone"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   onChange={(e) => setPhone(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+             `}
                 />
-                <label
-                  htmlFor="floatingphone"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Phone number
-                </label>
               </div>
 
-              <div className="relative z-0 w-full mb-5 group">
+              {/* Address */}
+              <div>
+                <label className="block text-sm font-medium">Address</label>
                 <input
                   type="text"
-                  name="floatingcompany"
-                  id="floatingcompany"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   onChange={(e) => setAddress(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+              `}
                 />
-                <label
-                  htmlFor="floatingcompany"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Address
-                </label>
               </div>
 
-              <div className="relative z-0 w-full mb-5 group">
+              {/* Payment Method */}
+              <div>
+                <label className="block text-sm font-medium">
+                  Payment Method
+                </label>
                 <select
-                  name="floatingpaymentmethods"
-                  id="floatingpaymentmethods"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required
-                  onChange={(e) => setPaymentMethods(e.target.value)}
                   value={paymentMethods}
+                  onChange={(e) => setPaymentMethods(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+              `}
                 >
                   <option value="" disabled>
                     Select payment method
@@ -338,154 +321,109 @@ const Users = () => {
                   <option value="banktransfer">Bank Transfer</option>
                   <option value="UPI">UPI</option>
                 </select>
-                <label
-                  htmlFor="floatingpaymentmethods"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Payment Methods
-                </label>
               </div>
-              <Button type="primary" text="Submit" onClick={handleSubmit} />
+
+              <div className="flex justify-end pt-4">
+                <Button type="primary" text="Submit" onClick={handleSubmit} />
+              </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* Update User Modal */}
       {showUpdateModal && (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
           <div
-            className="p-4 rounded shadow-md flex flex-col 
-               bg-gray-100
-            "
+            className="p-6 rounded-2xl shadow-2xl flex flex-col w-full max-w-lg
+        
+          theme  dark ? bg-gray-900 text-white : bg-white text-black
+        animate-fadeIn scale-95"
           >
-            <div className="flex justify-between">
-              <h2
-                className="text-lg font-bold mb-2 
-                   text-gray-900
-                "
-              >
-                Update User
-              </h2>
+            <div className="flex justify-between items-center border-b pb-2 mb-4">
+              <h2 className="text-xl font-semibold">✏️ Update User</h2>
               <Button
                 type="secondary"
-                text="X"
+                text="✕"
                 onClick={handleCloseUpdateModal}
               />
             </div>
-            <form
-              className="max-w-md mx-auto flex flex-col"
-              onSubmit={handleUpdateSubmit}
-            >
+            <form className="space-y-5" onSubmit={handleUpdateSubmit}>
               {/* First Name */}
-              <div className="relative z-0 w-full mb-5 group">
+              <div>
+                <label className="block text-sm font-medium">First Name</label>
                 <input
                   type="text"
-                  name="floatingfirstname"
-                  id="floatingfirstname"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
+                  className="mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+        "
                 />
-                <label
-                  htmlFor="floatingfirstname"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  First name
-                </label>
               </div>
 
               {/* Last Name */}
-              <div className="relative z-0 w-full mb-5 group">
+              <div>
+                <label className="block text-sm font-medium">Last Name</label>
                 <input
                   type="text"
-                  name="floatinglastname"
-                  id="floatinglastname"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+             }`}
                 />
-                <label
-                  htmlFor="floatinglastname"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Last name
-                </label>
               </div>
 
               {/* Email */}
-              <div className="relative z-0 w-full mb-5 group">
+              <div>
+                <label className="block text-sm font-medium">Email</label>
                 <input
                   type="email"
-                  name="floatingemail"
-                  id="floatingemail"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+             `}
                 />
-                <label
-                  htmlFor="floatingemail"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Email address
-                </label>
               </div>
 
               {/* Phone */}
-              <div className="relative z-0 w-full mb-5 group">
+              <div>
+                <label className="block text-sm font-medium">Phone</label>
                 <input
                   type="tel"
-                  name="floatingphone"
-                  id="floatingphone"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+             `}
                 />
-                <label
-                  htmlFor="floatingphone"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Phone number
-                </label>
               </div>
 
               {/* Address */}
-              <div className="relative z-0 w-full mb-5 group">
+              <div>
+                <label className="block text-sm font-medium">Address</label>
                 <input
                   type="text"
-                  name="floatingcompany"
-                  id="floatingcompany"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
                   required
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+              `}
                 />
-                <label
-                  htmlFor="floatingcompany"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Address
-                </label>
               </div>
 
-              {/* Payment Methods */}
-              <div className="relative z-0 w-full mb-5 group">
+              {/* Payment Method */}
+              <div>
+                <label className="block text-sm font-medium">
+                  Payment Method
+                </label>
                 <select
-                  name="floatingpaymentmethods"
-                  id="floatingpaymentmethods"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required
                   value={paymentMethods}
                   onChange={(e) => setPaymentMethods(e.target.value)}
+                  className={`mt-1 w-full p-2 border rounded-lg focus:outline-none focus:ring-2
+              `}
                 >
                   <option value="" disabled>
                     Select payment method
@@ -495,19 +433,15 @@ const Users = () => {
                   <option value="banktransfer">Bank Transfer</option>
                   <option value="UPI">UPI</option>
                 </select>
-                <label
-                  htmlFor="floatingpaymentmethods"
-                  className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-0 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
-                  Payment Methods
-                </label>
               </div>
 
-              <Button
-                type="primary"
-                text="Submit"
-                onClick={handleUpdateSubmit}
-              />
+              <div className="flex justify-end pt-4">
+                <Button
+                  type="primary"
+                  text="Update"
+                  onClick={handleUpdateSubmit}
+                />
+              </div>
             </form>
           </div>
         </div>
@@ -542,7 +476,7 @@ const Users = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {currentUsers.map((user) => (
                   <tr
                     key={user.id}
                     className={`border-b ${
@@ -587,6 +521,27 @@ const Users = () => {
                 ))}
               </tbody>
             </table>
+            <div className="flex justify-end items-center gap-2 mt-4 p-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className="px-3 py-1 hover:bg-gray-400 theme dark ? bg-gray-900 text-white : bg-white text-black"
+              >
+                Prev
+              </button>
+              <span>
+                Page {currentPage} of {Math.ceil(users.length / entriesPerPage)}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) =>
+                    Math.min(prev + 1, Math.ceil(users.length / entriesPerPage))
+                  )
+                }
+                className="px-3 py-1 hover:bg-gray-400 theme dark ? bg-gray-900 text-white : bg-white text-black"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       )}
