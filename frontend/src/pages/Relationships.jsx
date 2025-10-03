@@ -278,7 +278,7 @@ const Relationships = () => {
       <h1 className="text-4xl font-bold text-white mb-6">
         Relationships Graph
       </h1>
-      <div className="w-full max-w-4xl bg-black rounded shadow p-4">
+      <div className="w-full max-w-4xl theme light ?bg-gray-400 :bg-gray-900   theme light?text-black :text-white rounded shadow p-4">
         <div className="mb-4 text-lg font-semibold text-white">
           Relationships
         </div>
@@ -291,33 +291,44 @@ const Relationships = () => {
             borderRadius: "8px",
           }}
         />
-        <div className="flex flex-row flex-wrap gap-8 mt-6">
+        <div className="flex flex-wrap gap-6 mt-6">
+          {/* User Node */}
           <div className="flex items-center gap-2">
             <span
               style={{
-                width: 20,
-                height: 20,
+                width: 22,
+                height: 22,
                 borderRadius: "50%",
-                background: "#0074D9",
+                background: "radial-gradient(circle, #6366F1, #4F46E5)",
                 display: "inline-block",
-                border: "2px solid #333",
+                border: "2px solid #222",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
               }}
             ></span>
-            <span className="text-gray-300 text-sm">User Node</span>
+            <span className="theme dark?text-gray-200: text-black text-sm font-medium">
+              User Node
+            </span>
           </div>
+
+          {/* Transaction Node */}
           <div className="flex items-center gap-2">
             <span
               style={{
-                width: 20,
-                height: 20,
+                width: 22,
+                height: 22,
                 borderRadius: "50%",
-                background: "#F59E42",
+                background: "radial-gradient(circle, #FCD34D, #FBBF24)",
                 display: "inline-block",
                 border: "2px solid #333",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
               }}
             ></span>
-            <span className="text-gray-300 text-sm">Transaction Node</span>
+            <span className="theme dark?text-gray-200: text-black text-sm font-medium">
+              Transaction Node
+            </span>
           </div>
+
+          {/* SHARED_ATTRIBUTE Edge */}
           <div className="flex items-center gap-2">
             <span
               style={{
@@ -328,8 +339,12 @@ const Relationships = () => {
                 marginRight: 4,
               }}
             ></span>
-            <span className="text-gray-300 text-sm">SHARED_ATTRIBUTE</span>
+            <span className="theme dark?text-gray-200: text-black text-sm font-medium">
+              SHARED_ATTRIBUTE
+            </span>
           </div>
+
+          {/* CREDIT Edge */}
           <div className="flex items-center gap-2">
             <span
               style={{
@@ -340,8 +355,12 @@ const Relationships = () => {
                 marginRight: 4,
               }}
             ></span>
-            <span className="text-gray-300 text-sm">CREDIT</span>
+            <span className="theme dark?text-gray-200: text-black text-sm font-medium">
+              CREDIT
+            </span>
           </div>
+
+          {/* DEBIT Edge */}
           <div className="flex items-center gap-2">
             <span
               style={{
@@ -352,8 +371,12 @@ const Relationships = () => {
                 marginRight: 4,
               }}
             ></span>
-            <span className="text-gray-300 text-sm">DEBIT</span>
+            <span className="theme dark?text-gray-200: text-black text-sm font-medium">
+              DEBIT
+            </span>
           </div>
+
+          {/* RELATED_TO Edge */}
           <div className="flex items-center gap-2">
             <span
               style={{
@@ -364,7 +387,9 @@ const Relationships = () => {
                 marginRight: 4,
               }}
             ></span>
-            <span className="text-gray-300 text-sm">RELATED_TO</span>
+            <span className="theme dark?text-gray-200: text-black text-sm font-medium">
+              RELATED_TO
+            </span>
           </div>
         </div>
       </div>
